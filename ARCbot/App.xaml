@@ -1,0 +1,63 @@
+<Application
+    x:Class="ARCbot.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    ShutdownMode="OnMainWindowClose">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- ================= 新增：全局透明度与统一背景样式 ================= -->
+            <!-- 全局透明度变量 (默认值 0.6，后续通过代码修改它即可全局生效) -->
+            <system:Double x:Key="GlobalOverlayOpacity">0.6</system:Double>
+
+            <!-- 统一的背景遮罩样式 (完全复刻"我的机器人"的参数) -->
+            <Style x:Key="UnifiedOverlayBorderStyle" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource ApplicationBackgroundBrush}" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Opacity" Value="{DynamicResource GlobalOverlayOpacity}" />
+            </Style>
+            <!-- ================================================================ -->
+
+            <!-- ═══ 全局样式常量 ═══ -->
+            <CornerRadius x:Key="LargeCornerRadius">16</CornerRadius>
+            <CornerRadius x:Key="MediumCornerRadius">12</CornerRadius>
+            <CornerRadius x:Key="SmallCornerRadius">8</CornerRadius>
+
+            <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1AFFFFFF" />
+            <SolidColorBrush x:Key="CardBackgroundBrushDark" Color="#1A000000" />
+
+            <SolidColorBrush x:Key="AccentBrush" Color="#0078D7" />
+            <SolidColorBrush x:Key="AccentHoverBrush" Color="#106EBE" />
+
+            <SolidColorBrush x:Key="ConsoleBackgroundBrush" Color="#0D1117" />
+            <SolidColorBrush x:Key="ConsoleInfoBrush" Color="#DCE4EE" />
+            <SolidColorBrush x:Key="ConsoleWarnBrush" Color="#FFC107" />
+            <SolidColorBrush x:Key="ConsoleErrorBrush" Color="#FF5252" />
+            <SolidColorBrush x:Key="ConsoleStdinBrush" Color="#69F0AE" />
+
+            <DropShadowEffect
+                x:Key="DefaultDropShadowEffect"
+                BlurRadius="24"
+                ShadowDepth="4"
+                Opacity="0.15"
+                Color="Black" />
+
+            <!-- ★ 保留 BoolToVis 转换器（WPF 内置的，不会报错） -->
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+            <!-- ═══ 全局 TextBlock 样式：确保文字颜色跟随主题 ═══ -->
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

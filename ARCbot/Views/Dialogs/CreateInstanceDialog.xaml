@@ -1,0 +1,290 @@
+<Window
+    x:Class="ARCbot.Views.Dialogs.CreateInstanceDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="创建机器人实例"
+    Width="560"
+    Height="760"
+    WindowStartupLocation="CenterOwner"
+    ResizeMode="NoResize"
+    WindowStyle="None"
+    AllowsTransparency="True"
+    Background="Transparent">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
+
+    <Border
+        CornerRadius="12"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+        BorderThickness="1"
+        Margin="16"
+        Padding="0">
+
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="24" ShadowDepth="6" Opacity="0.15" Color="Black" />
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- ═══ 标题栏 ═══ -->
+            <DockPanel Grid.Row="0" Margin="24,24,24,16" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown" Background="Transparent">
+                <ui:Button
+                    DockPanel.Dock="Right"
+                    Icon="{ui:SymbolIcon Dismiss24}"
+                    Appearance="Transparent"
+                    CornerRadius="6"
+                    Padding="8,4"
+                    Click="Close_Click" />
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Bot24" FontSize="24" Foreground="{DynamicResource AccentBrush}" Margin="0,0,12,0"/>
+                    <TextBlock
+                        x:Name="DialogTitle"
+                        FontSize="20"
+                        FontWeight="SemiBold"
+                        VerticalAlignment="Center"
+                        Text="创建新实例" />
+                </StackPanel>
+            </DockPanel>
+
+            <!-- ═══ 表单滚动区 ═══ -->
+            <ScrollViewer
+                Grid.Row="1"
+                Margin="24,0,24,0"
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled">
+
+                <StackPanel Margin="0,0,0,16">
+
+                    <TextBlock Text="实例名称" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,6" />
+                    <ui:TextBox
+                        x:Name="InstanceNameBox"
+                        Text="{Binding InstanceName, UpdateSourceTrigger=PropertyChanged}"
+                        PlaceholderText="例如: MyBot01"
+                        Margin="0,0,0,24" />
+
+                    <!-- ─── 服务器配置 ─── -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <ui:SymbolIcon Symbol="Server24" FontSize="16" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="服务器配置" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="服务器地址 (MC_HOST)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                            <ui:TextBox Text="{Binding McHost, UpdateSourceTrigger=PropertyChanged}"
+                                        PlaceholderText="myarc.fun" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="端口 (MC_PORT)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                            <ui:TextBox Text="{Binding McPort, UpdateSourceTrigger=PropertyChanged}"
+                                        PlaceholderText="25565" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="版本 (MC_VERSION)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                            <ui:TextBox Text="{Binding McVersion, UpdateSourceTrigger=PropertyChanged}"
+                                        PlaceholderText="1.20.1" />
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="用户名 (MC_USERNAME)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                    <ui:TextBox
+                        Text="{Binding McUsername, UpdateSourceTrigger=PropertyChanged}"
+                        PlaceholderText="你的 Minecraft 用户名"
+                        Margin="0,0,0,12" />
+
+                    <TextBlock Text="认证方式 (MC_AUTH_TYPE)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                    <ComboBox
+                        ItemsSource="{Binding AuthTypes}"
+                        SelectedItem="{Binding McAuthType}"
+                        Margin="0,0,0,12" />
+
+                    <TextBlock Text="登录密码 (MC_LOGIN_PASSWORD, 选填)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                    <ui:PasswordBox
+                        x:Name="PasswordField"
+                        Margin="0,0,0,12"
+                        PasswordChanged="PasswordField_Changed" />
+
+                    <TextBlock Text="主人名称 (MC_OWNER_NAME)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                    <ui:TextBox
+                        Text="{Binding McOwnerName, UpdateSourceTrigger=PropertyChanged}"
+                        PlaceholderText="_FENTAI_"
+                        Margin="0,0,0,32" />
+
+                    <!-- ─── AI 配置 ─── -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <!-- ★ 修复：将可能不存在的 BrainBackground20 替换为基础的 Lightbulb24 -->
+                        <ui:SymbolIcon Symbol="Lightbulb24" FontSize="16" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="AI 配置" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <TextBlock Text="API Key (LLM_API_KEY)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                    <ui:TextBox
+                        Text="{Binding LlmApiKey, UpdateSourceTrigger=PropertyChanged}"
+                        PlaceholderText="ark-..."
+                        Margin="0,0,0,12" />
+
+                    <TextBlock Text="API URL (LLM_API_URL)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                    <ui:TextBox
+                        Text="{Binding LlmApiUrl, UpdateSourceTrigger=PropertyChanged}"
+                        PlaceholderText="https://..."
+                        Margin="0,0,0,12" />
+
+                    <TextBlock Text="模型名称 (LLM_MODEL)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                    <ui:TextBox
+                        Text="{Binding LlmModel, UpdateSourceTrigger=PropertyChanged}"
+                        PlaceholderText="doubao-..."
+                        Margin="0,0,0,12" />
+
+                    <TextBlock Text="对话模式 (TELL_MODE)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                    <ComboBox
+                        ItemsSource="{Binding TellModes}"
+                        SelectedItem="{Binding TellMode}"
+                        Margin="0,0,0,12" />
+
+                    <TextBlock Text="AI 风格提示词 (AI_STYLE_PROMPT)" FontSize="12" Opacity="0.6" Margin="0,0,0,6" />
+                    <!-- ★ 修复：多行文本框还原为原生 TextBox，避免 ui:TextBox 不支持多行属性导致崩溃 -->
+                    <TextBox
+                        Text="{Binding AiStylePrompt, UpdateSourceTrigger=PropertyChanged}"
+                        AcceptsReturn="True"
+                        TextWrapping="Wrap"
+                        MinHeight="80"
+                        MaxHeight="120"
+                        VerticalScrollBarVisibility="Auto"
+                        Padding="10,8"
+                        Background="{DynamicResource ControlFillColorDefaultBrush}"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        Margin="0,0,0,32">
+                        <TextBox.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+
+                    <!-- ─── 行为开关 ─── -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <ui:SymbolIcon Symbol="Wrench24" FontSize="16" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="行为设置" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,8">
+                        <DockPanel Margin="0,0,0,16">
+                            <ui:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding AutoDefendEnabled}" VerticalAlignment="Center" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="自动防御" FontSize="14" FontWeight="Medium" />
+                                <TextBlock Text="AUTO_DEFEND_ENABLED" FontSize="11" Opacity="0.5" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </DockPanel>
+
+                        <DockPanel Margin="0,0,0,16">
+                            <ui:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding InstinctAutoTpLogin}" VerticalAlignment="Center" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="登录自动传送" FontSize="14" FontWeight="Medium" />
+                                <TextBlock Text="INSTINCT_AUTO_TP_LOGIN" FontSize="11" Opacity="0.5" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </DockPanel>
+
+                        <DockPanel Margin="0,0,0,16">
+                            <ui:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding InstinctAutoEat}" VerticalAlignment="Center" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="自动进食" FontSize="14" FontWeight="Medium" />
+                                <TextBlock Text="INSTINCT_AUTO_EAT" FontSize="11" Opacity="0.5" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </DockPanel>
+
+                        <DockPanel Margin="0,0,0,16">
+                            <ui:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding InstinctAutoTool}" VerticalAlignment="Center" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="自动切换工具" FontSize="14" FontWeight="Medium" />
+                                <TextBlock Text="INSTINCT_AUTO_TOOL" FontSize="11" Opacity="0.5" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </DockPanel>
+
+                        <DockPanel Margin="0,0,0,16">
+                            <ui:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding InstinctAutoDump}" VerticalAlignment="Center" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="自动丢弃垃圾" FontSize="14" FontWeight="Medium" />
+                                <TextBlock Text="INSTINCT_AUTO_DUMP" FontSize="11" Opacity="0.5" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </DockPanel>
+
+                        <DockPanel Margin="0,0,0,16">
+                            <ui:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding DebugMode}" VerticalAlignment="Center" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="调试模式" FontSize="14" FontWeight="Medium" />
+                                <TextBlock Text="DEBUG_MODE" FontSize="11" Opacity="0.5" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </DockPanel>
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ═══ 底部操作栏 ═══ -->
+            <Border
+                Grid.Row="2"
+                Padding="24,16"
+                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                CornerRadius="0,0,12,12"
+                BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}">
+
+                <DockPanel>
+                    <TextBlock
+                        DockPanel.Dock="Left"
+                        x:Name="ErrorLabel"
+                        Text="{Binding ErrorMessage}"
+                        Foreground="#FF5252"
+                        FontSize="12"
+                        VerticalAlignment="Center"
+                        MaxWidth="260"
+                        TextTrimming="CharacterEllipsis"
+                        Visibility="{Binding HasError, Converter={StaticResource BoolToVis}}" />
+
+                    <StackPanel
+                        DockPanel.Dock="Right"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+
+                        <ui:Button
+                            Content="取消"
+                            Appearance="Secondary"
+                            CornerRadius="6"
+                            Padding="20,8"
+                            Margin="0,0,12,0"
+                            Click="Close_Click" />
+
+                        <ui:Button
+                            x:Name="SaveButton"
+                            Content="保存并创建"
+                            Icon="{ui:SymbolIcon Save24}"
+                            Appearance="Info"
+                            CornerRadius="6"
+                            Padding="20,8"
+                            Command="{Binding SaveCommand}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+        </Grid>
+    </Border>
+</Window>

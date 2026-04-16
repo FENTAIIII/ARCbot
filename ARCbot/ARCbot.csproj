@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+		<AssemblyName>ARCbot</AssemblyName>
+		<RootNamespace>ARCbot</RootNamespace>
+		<Version>1.0.3</Version>
+		<!-- 1. 强制将所有 C++ 原生库（包括 WPF底层和 WebView2）全部塞进 EXE 中 -->
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+
+		<!-- 2. 不生成 .pdb 调试符号文件（或者设为 embedded 嵌进去） -->
+		<DebugType>None</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+
+		<!-- 3. 不在发布目录生成多余的 .xml 注释文档 -->
+		<PublishDocumentationFiles>false</PublishDocumentationFiles>
+
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Assets\bg1.png" />
+	  <None Remove="Assets\bg2.png" />
+	  <None Remove="Assets\bg3.png" />
+	  <None Remove="Assets\bg4.png" />
+	  <None Remove="Assets\bg5.png" />
+	  <None Remove="Assets\bg6.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3912.50" />
+		<PackageReference Include="WPF-UI" Version="3.*" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.*" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Assets\bg1.png" />
+	  <Resource Include="Assets\bg2.png" />
+	  <Resource Include="Assets\bg3.png" />
+	  <Resource Include="Assets\bg4.png" />
+	  <Resource Include="Assets\bg5.png" />
+	  <Resource Include="Assets\bg6.png" />
+	</ItemGroup>
+
+</Project>

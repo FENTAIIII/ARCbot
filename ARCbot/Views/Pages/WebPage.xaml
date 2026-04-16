@@ -1,0 +1,24 @@
+<UserControl
+    x:Class="ARCbot.Views.Pages.WebPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+    <Grid Background="{DynamicResource ApplicationBackgroundBrush}">
+        <wv2:WebView2 
+            x:Name="WebView" 
+            Source="about:blank"
+            DefaultBackgroundColor="Transparent" />
+        
+        <!-- 加载进度条 -->
+        <ProgressBar
+            x:Name="LoadingProgressBar"
+            VerticalAlignment="Top"
+            IsIndeterminate="True"
+            Height="2"
+            Visibility="Collapsed"
+            Panel.ZIndex="1" />
+    </Grid>
+</UserControl>
